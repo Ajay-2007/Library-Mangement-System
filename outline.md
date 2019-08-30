@@ -15,6 +15,7 @@ Library system:
 
 	book:
 		- title
+		- code
 		- description
 		- category
 		- price
@@ -25,3 +26,16 @@ Library system:
 		- username
 		- password
 		- email address
+
+	day_to_day
+		- book name
+		- retrieve / rent
+		- days
+	category :
+		- name
+
+	publisher :
+		- name
+
+	author :
+		- name
