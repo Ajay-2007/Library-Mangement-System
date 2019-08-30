@@ -2,7 +2,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 import sys
-# import MySQLdb
+import pymysql as MySQLdb
 from PyQt5.uic import loadUiType
 
 ui, _ = loadUiType('library.ui')
@@ -14,10 +14,18 @@ class MainApp(QMainWindow, ui):
         self.setupUi(self)
         self.Handle_UI_Changes()
         self.Handle_Buttons()
+        self.Show_Category()
+
         self.pushButton.clicked.connect(self.Open_Day_To_Day_Tab)
         self.pushButton_2.clicked.connect(self.Open_Books_Tab)
         self.pushButton_3.clicked.connect(self.Open_Users_Tab)
         self.pushButton_4.clicked.connect(self.Open_Settings_Tab)
+
+        self.pushButton_7.clicked.connect(self.Add_New_Book)
+
+        self.pushButton_16.clicked.connect(self.Add_Category)
+        self.pushButton_15.clicked.connect(self.Add_Author)
+        self.pushButton_14.clicked.connect(self.Add_Publisher)
 
     def Handle_UI_Changes(self):
         self.Hiding_Themes()
@@ -49,7 +57,16 @@ class MainApp(QMainWindow, ui):
     ################################################
     ######### Books #########################
     def Add_New_Book(self):
-        pass
+        self.db = MySQLdb.connect(host='localhost' , user='root', password='d33ps3curity', db='library')
+        self.cur = self.db.cursor()
+
+        book_title = self.lineEdit_2.text()
+        book_code = self.lineEdit_3.text()
+        book_category = self.comboBox_3.CurrentText()
+        book_author = self.comboBox_4.CurrentText()
+        book_publisher = self.comboBox_5.CurrentText()
+        book_price = self.lineEdit_4.text()
+
 
     def Search_Books(self):
         pass
@@ -71,6 +88,71 @@ class MainApp(QMainWindow, ui):
     def Edit_User(self):
         pass
 
+    ################################################
+    ######### settings #########################
+    def Add_Category(self):
+        self.db = MySQLdb.connect(host='localhost', user='root', password='d33ps3curity', db='library')
+        self.cur = self.db.cursor()
+
+        category_name = self.lineEdit_21.text()
+        self.cur.execute('''
+            INSERT INTO category (category_name) VALUES (%s)
+        ''', (category_name,))
+
+        self.db.commit()
+        self.statusBar().showMessage('New Category Added ')
+        self.lineEdit_21.setText('')
+        self.Show_Category()
+
+    def Show_Category(self):
+        self.db = MySQLdb.connect(host='localhost', user='root', password='d33ps3curity', db='library')
+        self.cur = self.db.cursor()
+
+        self.cur.execute(''' SELECT category_name FROM category ''')
+        data = self.cur.fetchall()
+        print(data)
+        # self.tableWidget_4.insertRow(0)
+        if data:
+            self.tableWidget_4.setRowCount(0)
+            self.tableWidget_4.insertRow(0)
+            for row, form in enumerate(data):
+                for column, item in enumerate(form):
+                    self.tableWidget_4.setItem(row, column, QTableWidgetItem(str(item)))
+                    column += 1
+
+                row_position = self.tableWidget_4.rowCount()
+                self.tableWidget_4.insertRow(row_position)
+    def Add_Author(self):
+        self.db = MySQLdb.connect(host='localhost', user='root', password='d33ps3curity', db='library')
+        self.cur = self.db.cursor()
+
+        author_name = self.lineEdit_20.text()
+        self.cur.execute('''
+        INSERT INTO author (author_name) VALUES (%s)
+        ''', (author_name, ))
+
+        self.db.commit()
+        self.lineEdit_20.setText('')
+        self.statusBar().showMessage('New Author Added ')
+
+    def Show_Author(self):
+        pass
+
+    def Add_Publisher(self):
+        self.db = MySQLdb.connect(host='localhost', user='root', password='d33ps3curity', db='library')
+        self.cur = self.db.cursor()
+
+        publisher_name = self.lineEdit_19.text()
+        self.cur.execute('''
+        INSERT INTO publisher (publisher_name) VALUES (%s)
+        ''', (publisher_name, ))
+
+        self.db.commit()
+        self.lineEdit_19.setText('')
+        self.statusBar().showMessage('New Publisher Added ')
+
+    def Show_Publisher(self):
+        pass
 def main():
     app = QApplication(sys.argv)
     window = MainApp()
