@@ -1374,6 +1374,9 @@
     </widget>
    </widget>
    <widget class="QGroupBox" name="groupBox_2">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>680</x>
@@ -1457,6 +1460,19 @@ background-color: rgb(117, 117, 117);</string>
      </property>
      <property name="text">
       <string>PushButton</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton_21">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>230</y>
+       <width>21</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>&gt;</string>
      </property>
     </widget>
    </widget>
