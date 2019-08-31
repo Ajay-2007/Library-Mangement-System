@@ -14,6 +14,7 @@ class MainApp(QMainWindow, ui):
         self.setupUi(self)
         self.Handle_UI_Changes()
         self.Handle_Buttons()
+        self.Dark_Orange_Theme()
         self.Show_Author()
         self.Show_Category()
         self.Show_Publisher()
@@ -29,7 +30,8 @@ class MainApp(QMainWindow, ui):
         self.tabWidget.tabBar().setVisible(False)
     def Handle_Buttons(self):
         self.pushButton_5.clicked.connect(self.Show_Themes)
-        self.pushButton_21.clicked.connect(self.Hiding_Themes)
+        # self.pushButton_21.clicked.connect(self.Hiding_Themes)
+        self.pushButton_26.clicked.connect(self.Hiding_Themes)
         self.pushButton.clicked.connect(self.Open_Day_To_Day_Tab)
         self.pushButton_2.clicked.connect(self.Open_Books_Tab)
         self.pushButton_3.clicked.connect(self.Open_Users_Tab)
@@ -48,11 +50,16 @@ class MainApp(QMainWindow, ui):
         self.pushButton_12.clicked.connect(self.Login)
         self.pushButton_13.clicked.connect(self.Edit_User)
 
+        self.pushButton_22.clicked.connect(self.Dark_Blue_Theme)
+        self.pushButton_23.clicked.connect(self.Dark_Gray_Theme)
+        self.pushButton_24.clicked.connect(self.Dark_Orange_Theme)
+        self.pushButton_25.clicked.connect(self.QDark_Theme)
+
     def Show_Themes(self):
-        self.groupBox_2.show()
+        self.groupBox_5.show()
 
     def Hiding_Themes(self):
-        self.groupBox_2.hide()
+        self.groupBox_5.hide()
 
     ################################################
     ######### Opening Tabs #########################
@@ -349,6 +356,29 @@ class MainApp(QMainWindow, ui):
             self.comboBox_5.addItem(publisher[0])
             self.comboBox_7.addItem(publisher[0])
 
+    ################################################
+    ######### UI Themes #########################
+
+    def Dark_Blue_Theme(self):
+        style = open('themes/darkblue.css')
+        style = style.read()
+        self.setStyleSheet(style)
+
+
+    def Dark_Gray_Theme(self):
+        style = open('themes/darkgray.css')
+        style = style.read()
+        self.setStyleSheet(style)
+
+    def Dark_Orange_Theme(self):
+        style = open('themes/darkorange.css')
+        style = style.read()
+        self.setStyleSheet(style)
+
+    def QDark_Theme(self):
+        style = open('themes/qdarkstyle.css')
+        style = style.read()
+        self.setStyleSheet(style)
 def main():
     app = QApplication(sys.argv)
     window = MainApp()
