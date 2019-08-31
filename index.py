@@ -22,6 +22,9 @@ class MainApp(QMainWindow, ui):
         self.Show_Author_Combobox()
         self.Show_Publisher_Combobox()
 
+        self.Show_All_Client()
+        self.Show_All_Book()
+
 
 
 
@@ -86,6 +89,22 @@ class MainApp(QMainWindow, ui):
 
     ################################################
     ######### Books #########################
+
+    def Show_All_Book(self):
+        self.db = MySQLdb.connect(host='localhost', user='root', password='d33ps3curity', db='library')
+        self.cur = self.db.cursor()
+
+        self.cur.execute(''' SELECT book_code, book_name, book_description, book_category, book_author, book_publisher, book_price FROM book''')
+        data = self.cur.fetchall()
+        print(data)
+        self.tableWidget_5.insertRow(0)
+        for row, form in enumerate(data):
+            for column, item in enumerate(form):
+                self.tableWidget_5.setItem(row, column, QTableWidgetItem(str(item)))
+                column += 1
+            row_position = self.tableWidget_5.rowCount()
+            self.tableWidget_5.insertRow(row_position)
+        self.db.close()
     def Add_New_Book(self):
         self.db = MySQLdb.connect(host='localhost' , user='root', password='d33ps3curity', db='library')
         self.cur = self.db.cursor()
@@ -182,8 +201,20 @@ class MainApp(QMainWindow, ui):
         self.statusBar().showMessage('New Client Added')
 
     def Show_All_Client(self):
-        pass
-    
+        self.db = MySQLdb.connect(host='localhost', user='root', password='d33ps3curity', db='library')
+        self.cur = self.db.cursor()
+
+        self.cur.execute(''' SELECT client_name, client_email, client_id FROM clients''')
+        data = self.cur.fetchall()
+        print(data)
+        self.tableWidget_6.insertRow(0)
+        for row, form in enumerate(data):
+            for column, item in enumerate(form):
+                self.tableWidget_6.setItem(row, column, QTableWidgetItem(str(item)))
+                column += 1
+            row_position = self.tableWidget_6.rowCount()
+            self.tableWidget_6.insertRow(row_position)
+        self.db.close()
     def Edit_Client(self):
         self.db = MySQLdb.connect(host='localhost' , user='root', password='d33ps3curity', db='library')
         self.cur = self.db.cursor()
