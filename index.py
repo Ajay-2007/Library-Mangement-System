@@ -185,14 +185,49 @@ class MainApp(QMainWindow, ui):
         pass
     
     def Edit_Client(self):
-        pass
+        self.db = MySQLdb.connect(host='localhost' , user='root', password='d33ps3curity', db='library')
+        self.cur = self.db.cursor()
 
+        client_original_id = self.lineEdit_27.text()
+        client_name = self.lineEdit_25.text()
+        client_email = self.lineEdit_28.text()
+        client_id_new = self.lineEdit_26.text()
+
+        self.cur.execute('''
+            UPDATE clients SET client_name = %s, client_email = %s, client_id = %s WHERE client_id = %s
+        ''', (client_name, client_email, client_id_new, client_original_id))
+        self.db.commit()
+        self.db.close()
+        self.statusBar().showMessage('Client Data Updated ')
 
     def Search_Client(self):
-        pass
+        self.db = MySQLdb.connect(host='localhost' , user='root', password='d33ps3curity', db='library')
+        self.cur = self.db.cursor()
+        client_id = self.lineEdit_27.text()
+
+        sql = ''' SELECT * FROM clients WHERE client_id = %s'''
+        self.cur.execute(sql, [(client_id)])
+        data = self.cur.fetchone()
+        print(data)
+
+        self.lineEdit_25.setText(data[1])
+        self.lineEdit_28.setText(data[2])
+        self.lineEdit_26.setText(data[3])
 
     def Delete_Client(self):
-        pass
+        self.db = MySQLdb.connect(host='localhost' , user='root', password='d33ps3curity', db='library')
+        self.cur = self.db.cursor()
+        client_original_id = self.lineEdit_27.text()
+        warning_message = QMessageBox.warning(self, "Delete Client", "Are you sure, you want to delete this client", QMessageBox.Yes | QMessageBox.No)
+
+        if warning_message == QMessageBox.Yes:
+            self.cur.execute('''
+                DELETE FROM clients
+                WHERE client_id = %s
+            ''', (client_original_id))
+            self.db.commit()
+            self.db.close()
+            self.statusBar().showMessage('Client Deleted ')
 
     ################################################
     ######### users #########################
