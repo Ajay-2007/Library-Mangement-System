@@ -1,3 +1,5 @@
+import datetime
+
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
@@ -64,6 +66,8 @@ class MainApp(QMainWindow, ui):
         self.pushButton_18.clicked.connect(self.Edit_Client)
         self.pushButton_20.clicked.connect(self.Delete_Client)
 
+        self.pushButton_6.clicked.connect(self.Handle_Day_Operations)
+
     def Show_Themes(self):
         self.groupBox_5.show()
 
@@ -86,6 +90,28 @@ class MainApp(QMainWindow, ui):
 
     def Open_Settings_Tab(self):
         self.tabWidget.setCurrentIndex(4)
+
+    ################################################
+    ######### Day Operations #########################
+    def Handle_Day_Operations(self):
+        self.db = MySQLdb.connect(host='localhost', user='root', password='d33ps3curity', db='library')
+        self.cur = self.db.cursor()
+        book_title = self.lineEdit.text()
+        client_name = self.lineEdit_29.text()
+        type = self.comboBox.currentText()
+        days_number = self.comboBox_2.currentIndex() + 1
+        today_date = datetime.date.today()
+        to_date = today_date + datetime.timedelta(days = days_number)
+
+
+        self.cur.execute('''
+            INSERT INTO dayoperations(book_name, client_name, type, days, date, to_date )
+            VALUES (%s, %s, %s,  %s, %s, %s)
+        ''', (book_title, client_name, type, days_number, today_date, to_date))
+
+        self.db.commit()
+        self.statusBar().showMessage('New Operations Added')
+        self.db.close()
 
     ################################################
     ######### Books #########################
