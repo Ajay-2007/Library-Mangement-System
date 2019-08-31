@@ -44,6 +44,9 @@ class MainApp(QMainWindow, ui):
         self.pushButton_14.clicked.connect(self.Add_Publisher)
         self.pushButton_10.clicked.connect(self.Delete_Books)
 
+        self.pushButton_11.clicked.connect(self.Add_New_User)
+        self.pushButton_12.clicked.connect(self.Login)
+
     def Show_Themes(self):
         self.groupBox_2.show()
 
@@ -148,13 +151,64 @@ class MainApp(QMainWindow, ui):
     ################################################
     ######### users #########################
     def Add_New_User(self):
-        pass
+        self.db = MySQLdb.connect(host='localhost' , user='root', password='d33ps3curity', db='library')
+        self.cur = self.db.cursor()
+
+        username = self.lineEdit_9.text()
+        email = self.lineEdit_10.text()
+        password = self.lineEdit_11.text()
+        password_2 = self.lineEdit_12.text()
+
+        if password == password_2:
+            self.cur.execute('''
+                INSERT INTO users(user_name, user_email, user_password)
+                VALUES (%s, %s, %s)
+            ''', (username, email, password))
+
+            self.db.commit()
+            self.statusBar().showMessage('New User Added')
+        else:
+            self.label_30.setText('Please enter a valid password again')
+
 
     def Login(self):
-        pass
+        self.db = MySQLdb.connect(host='localhost' , user='root', password='d33ps3curity', db='library')
+        self.cur = self.db.cursor()
+
+        username = self.lineEdit_13.text()
+        password = self.lineEdit_14.text()
+
+        sql: str = ''' SELECT * FROM users '''
+        self.cur.execute(sql)
+        data = self.cur.fetchall()
+        for row in data:
+            if username == row[1] and password == row[3]:
+                print('user match')
+                self.statusBar().showMessage('Valid Username & Password')
+                self.groupBox_4.setEnabled(True)
+
+                self.lineEdit_15.setText(row[1])
+                self.lineEdit_17.setText(row[2])
+                self.lineEdit_16.setText(row[3])
 
     def Edit_User(self):
-        pass
+        username = self.lineEdit_15.text()
+        email = self.lineEdit_17.text()
+        password = self.lineEdit_16.text()
+        password_2 = self.lineEdit_18.text()
+
+        if password == password_2:
+            self.db = MySQLdb.connect(host='localhost', user='root', password='d33ps3curity', db='library')
+            self.cur = self.db.cursor()
+            self.cur.execute('''
+                UPDATE users SET user_name = %s, user_email = %s, user_password = %s WHERE user_name = %s
+            ''', (username, email, password, username))
+
+            self.db.commit()
+
+
+        else:
+            print('Make Sure You Enter Your Password Correctly')
 
     ################################################
     ######### settings #########################
