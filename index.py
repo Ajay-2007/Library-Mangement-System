@@ -97,6 +97,7 @@ class MainApp(QMainWindow, ui):
         self.cur.execute(''' SELECT book_code, book_name, book_description, book_category, book_author, book_publisher, book_price FROM book''')
         data = self.cur.fetchall()
         print(data)
+        self.tableWidget_5.setRowCount(0)
         self.tableWidget_5.insertRow(0)
         for row, form in enumerate(data):
             for column, item in enumerate(form):
@@ -112,9 +113,9 @@ class MainApp(QMainWindow, ui):
         book_title = self.lineEdit_2.text()
         book_description = self.textEdit.toPlainText()
         book_code = self.lineEdit_3.text()
-        book_category = self.comboBox_3.currentIndex()
-        book_author = self.comboBox_4.currentIndex()
-        book_publisher = self.comboBox_5.currentIndex()
+        book_category = self.comboBox_3.currentText()
+        book_author = self.comboBox_4.currentText()
+        book_publisher = self.comboBox_5.currentText()
         book_price = self.lineEdit_4.text()
 
         self.cur.execute('''
@@ -130,6 +131,7 @@ class MainApp(QMainWindow, ui):
         self.comboBox_4.setCurrentIndex(0)
         self.comboBox_5.setCurrentIndex(0)
         self.lineEdit_4.setText('')
+        self.Show_All_Book()
 
     def Search_Books(self):
         self.db = MySQLdb.connect(host='localhost' , user='root', password='d33ps3curity', db='library')
@@ -144,9 +146,9 @@ class MainApp(QMainWindow, ui):
         self.lineEdit_8.setText(data[1])
         self.textEdit_2.setPlainText(data[2])
         self.lineEdit_6.setText(data[3])
-        self.comboBox_8.setCurrentIndex(data[4])
-        self.comboBox_6.setCurrentIndex(data[5])
-        self.comboBox_7.setCurrentIndex(data[6])
+        self.comboBox_8.setCurrentText(data[4])
+        self.comboBox_6.setCurrentText(data[5])
+        self.comboBox_7.setCurrentText(data[6])
         self.lineEdit_5.setText(str(data[7]))
     def Edit_Books(self):
         self.db = MySQLdb.connect(host='localhost' , user='root', password='d33ps3curity', db='library')
@@ -155,9 +157,9 @@ class MainApp(QMainWindow, ui):
         book_title = self.lineEdit_8.text()
         book_description = self.textEdit_2.toPlainText()
         book_code = self.lineEdit_6.text()
-        book_category = self.comboBox_8.currentIndex()
-        book_author = self.comboBox_6.currentIndex()
-        book_publisher = self.comboBox_7.currentIndex()
+        book_category = self.comboBox_8.currentText()
+        book_author = self.comboBox_6.currentText()
+        book_publisher = self.comboBox_7.currentText()
         book_price = self.lineEdit_5.text()
 
         search_book_title = self.lineEdit_7.text()
@@ -169,6 +171,7 @@ class MainApp(QMainWindow, ui):
 
         self.db.commit()
         self.statusBar().showMessage('Book Updated')
+        self.Show_All_Book()
     def Delete_Books(self):
         self.db = MySQLdb.connect(host='localhost' , user='root', password='d33ps3curity', db='library')
         self.cur = self.db.cursor()
@@ -181,9 +184,27 @@ class MainApp(QMainWindow, ui):
             self.cur.execute(sql, [(book_title)])
             self.db.commit()
             self.statusBar().showMessage('Book Deleted')
+            self.Show_All_Book()
 
     ################################################
     ######### users #########################
+    def Show_All_Client(self):
+        self.db = MySQLdb.connect(host='localhost', user='root', password='d33ps3curity', db='library')
+        self.cur = self.db.cursor()
+
+        self.cur.execute(''' SELECT client_name, client_email, client_id FROM clients''')
+        data = self.cur.fetchall()
+        print(data)
+        self.tableWidget_6.setRowCount(0)
+        self.tableWidget_6.insertRow(0)
+        for row, form in enumerate(data):
+            for column, item in enumerate(form):
+                self.tableWidget_6.setItem(row, column, QTableWidgetItem(str(item)))
+                column += 1
+            row_position = self.tableWidget_6.rowCount()
+            self.tableWidget_6.insertRow(row_position)
+        self.db.close()
+
     def Add_New_Client (self):
 
         self.db = MySQLdb.connect(host='localhost' , user='root', password='d33ps3curity', db='library')
@@ -199,22 +220,9 @@ class MainApp(QMainWindow, ui):
         self.db.commit()
         self.db.close()
         self.statusBar().showMessage('New Client Added')
+        self.Show_All_Client()
 
-    def Show_All_Client(self):
-        self.db = MySQLdb.connect(host='localhost', user='root', password='d33ps3curity', db='library')
-        self.cur = self.db.cursor()
 
-        self.cur.execute(''' SELECT client_name, client_email, client_id FROM clients''')
-        data = self.cur.fetchall()
-        print(data)
-        self.tableWidget_6.insertRow(0)
-        for row, form in enumerate(data):
-            for column, item in enumerate(form):
-                self.tableWidget_6.setItem(row, column, QTableWidgetItem(str(item)))
-                column += 1
-            row_position = self.tableWidget_6.rowCount()
-            self.tableWidget_6.insertRow(row_position)
-        self.db.close()
     def Edit_Client(self):
         self.db = MySQLdb.connect(host='localhost' , user='root', password='d33ps3curity', db='library')
         self.cur = self.db.cursor()
@@ -230,6 +238,7 @@ class MainApp(QMainWindow, ui):
         self.db.commit()
         self.db.close()
         self.statusBar().showMessage('Client Data Updated ')
+        self.Show_All_Client()
 
     def Search_Client(self):
         self.db = MySQLdb.connect(host='localhost' , user='root', password='d33ps3curity', db='library')
@@ -244,6 +253,7 @@ class MainApp(QMainWindow, ui):
         self.lineEdit_25.setText(data[1])
         self.lineEdit_28.setText(data[2])
         self.lineEdit_26.setText(data[3])
+        self.Show_All_Client()
 
     def Delete_Client(self):
         self.db = MySQLdb.connect(host='localhost' , user='root', password='d33ps3curity', db='library')
@@ -259,6 +269,7 @@ class MainApp(QMainWindow, ui):
             self.db.commit()
             self.db.close()
             self.statusBar().showMessage('Client Deleted ')
+            self.Show_All_Client()
 
     ################################################
     ######### users #########################
