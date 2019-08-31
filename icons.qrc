@@ -5,7 +5,8 @@
 	<file>icons/books.png</file>
 	<file>icons/settings.png</file>
 	<file>icons/theme.png</file>
-	<file>icons/users.png</file> 
+	<file>icons/users.png</file>
+		<file>icons/authentication.png</file>
 	</qresource>
 
 </RCC>
