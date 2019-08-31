@@ -26,6 +26,7 @@ class MainApp(QMainWindow, ui):
 
         self.Show_All_Client()
         self.Show_All_Book()
+        self.Show_All_Operations()
 
 
 
@@ -112,6 +113,27 @@ class MainApp(QMainWindow, ui):
         self.db.commit()
         self.statusBar().showMessage('New Operations Added')
         self.db.close()
+        self.Show_All_Operations()
+
+    def Show_All_Operations(self):
+        self.db = MySQLdb.connect(host='localhost', user='root', password='d33ps3curity', db='library')
+        self.cur = self.db.cursor()
+
+        self.cur.execute('''
+            SELECT book_name, client_name, type, date, to_date
+            FROM dayoperations
+        ''')
+
+        data = self.cur.fetchall()
+        print(data)
+        self.tableWidget.setRowCount(0)
+        self.tableWidget.insertRow(0)
+        for row, form in enumerate(data):
+            for column, item in enumerate(form):
+                self.tableWidget.setItem(row, column, QTableWidgetItem(str(item)))
+                column += 1
+            row_position = self.tableWidget.rowCount()
+            self.tableWidget.insertRow(row_position)
 
     ################################################
     ######### Books #########################
