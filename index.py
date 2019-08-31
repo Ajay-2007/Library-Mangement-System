@@ -46,6 +46,7 @@ class MainApp(QMainWindow, ui):
 
         self.pushButton_11.clicked.connect(self.Add_New_User)
         self.pushButton_12.clicked.connect(self.Login)
+        self.pushButton_13.clicked.connect(self.Edit_User)
 
     def Show_Themes(self):
         self.groupBox_2.show()
@@ -192,19 +193,21 @@ class MainApp(QMainWindow, ui):
                 self.lineEdit_16.setText(row[3])
 
     def Edit_User(self):
-        username = self.lineEdit_15.text()
+        username = self.lineEdit_13.text()
         email = self.lineEdit_17.text()
         password = self.lineEdit_16.text()
         password_2 = self.lineEdit_18.text()
+        username_new = self.lineEdit_15.text()
 
         if password == password_2:
             self.db = MySQLdb.connect(host='localhost', user='root', password='d33ps3curity', db='library')
             self.cur = self.db.cursor()
             self.cur.execute('''
                 UPDATE users SET user_name = %s, user_email = %s, user_password = %s WHERE user_name = %s
-            ''', (username, email, password, username))
+            ''', (username_new, email, password, username))
 
             self.db.commit()
+            self.statusBar().showMessage('User Data Updated Successfully')
 
 
         else:
