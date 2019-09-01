@@ -8,6 +8,31 @@ import pymysql as MySQLdb
 from PyQt5.uic import loadUiType
 
 ui, _ = loadUiType('library.ui')
+login, _ = loadUiType('login.ui')
+
+class Login(QWidget, login):
+    def __init__(self):
+        QWidget.__init__(self)
+        self.setupUi(self)
+        self.pushButton.clicked.connect(self.Handle_Login)
+    def Handle_Login(self):
+        username = self.lineEdit.text()
+        password = self.lineEdit_2.text()
+
+        self.db = MySQLdb.connect(host='localhost' , user='root', password='d33ps3curity', db='library')
+        self.cur = self.db.cursor()
+
+        sql: str = ''' SELECT * FROM users '''
+        self.cur.execute(sql)
+        data = self.cur.fetchall()
+        for row in data:
+            if username == row[1] and password == row[3]:
+                print('user match')
+                self.window_2 = MainApp()
+                self.close()
+                self.window_2.show()
+            else:
+                self.label.setText('Make Sure You Entered Your Username and Password Correctly')
 
 
 class MainApp(QMainWindow, ui):
@@ -544,7 +569,7 @@ class MainApp(QMainWindow, ui):
         self.setStyleSheet(style)
 def main():
     app = QApplication(sys.argv)
-    window = MainApp()
+    window = Login()
     window.show()
     app.exec_()
 
